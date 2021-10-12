@@ -145,7 +145,6 @@ namespace BETECommerceAPI.BLL
                     throw;
                 }
             }
-
         }
 
         public static class ItemHelper

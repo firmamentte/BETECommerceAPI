@@ -17,74 +17,60 @@ namespace BETECommerceAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> SignUp()
         {
-            try
+            #region RequestValidation
+
+            ModelState.Clear();
+
+            if (!Request.Headers.TryGetValue("EmailAddress", out StringValues _emailAddress))
             {
-                #region RequestValidation
-
-                ModelState.Clear();
-
-                if (!Request.Headers.TryGetValue("EmailAddress", out StringValues _emailAddress))
-                {
-                    ModelState.AddModelError("EmailAddress", "Email Address required");
-                }
-
-                if (!Request.Headers.TryGetValue("UserPassword", out StringValues _userPassword))
-                {
-                    ModelState.AddModelError("UserPassword", "User Password required");
-                }
-
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(new ApiErrorResp(ModelState));
-                }
-
-                #endregion
-
-                await BETECommerceAPIBLL.ApplicationUserHelper.SignUp(_emailAddress.FirstOrDefault(), _userPassword.FirstOrDefault());
-
-                return StatusCode((int)HttpStatusCode.Created);
+                ModelState.AddModelError("EmailAddress", "Email Address required");
             }
-            catch (BETECommerceAPIException)
+
+            if (!Request.Headers.TryGetValue("UserPassword", out StringValues _userPassword))
             {
-                throw;
+                ModelState.AddModelError("UserPassword", "User Password required");
             }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiErrorResp(ModelState));
+            }
+
+            #endregion
+
+            await BETECommerceAPIBLL.ApplicationUserHelper.SignUp(_emailAddress.FirstOrDefault(), _userPassword.FirstOrDefault());
+
+            return StatusCode((int)HttpStatusCode.Created);
         }
 
         [Route("V1/SignIn")]
         [HttpPost]
         public async Task<ActionResult> SignIn()
         {
-            try
+            #region RequestValidation
+
+            ModelState.Clear();
+
+            if (!Request.Headers.TryGetValue("EmailAddress", out StringValues _emailAddress))
             {
-                #region RequestValidation
-
-                ModelState.Clear();
-
-                if (!Request.Headers.TryGetValue("EmailAddress", out StringValues _emailAddress))
-                {
-                    ModelState.AddModelError("EmailAddress", "Email Address required");
-                }
-
-                if (!Request.Headers.TryGetValue("UserPassword", out StringValues _userPassword))
-                {
-                    ModelState.AddModelError("UserPassword", "User Password required");
-                }
-
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(new ApiErrorResp(ModelState));
-                }
-
-                #endregion
-
-                await BETECommerceAPIBLL.ApplicationUserHelper.SignIn(_emailAddress.FirstOrDefault(), _userPassword.FirstOrDefault());
-
-                return Ok();
+                ModelState.AddModelError("EmailAddress", "Email Address required");
             }
-            catch (BETECommerceAPIException)
+
+            if (!Request.Headers.TryGetValue("UserPassword", out StringValues _userPassword))
             {
-                throw;
+                ModelState.AddModelError("UserPassword", "User Password required");
             }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiErrorResp(ModelState));
+            }
+
+            #endregion
+
+            await BETECommerceAPIBLL.ApplicationUserHelper.SignIn(_emailAddress.FirstOrDefault(), _userPassword.FirstOrDefault());
+
+            return Ok();
         }
     }
 }

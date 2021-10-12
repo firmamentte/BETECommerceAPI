@@ -18,37 +18,31 @@ namespace BETECommerceAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> CreatePurchaseOrder([FromBody] List<LineItemReq> lineItems)
         {
-            try
+
+            #region RequestValidation
+
+            ModelState.Clear();
+
+            if (lineItems is null)
             {
-                #region RequestValidation
-
-                ModelState.Clear();
-
-                if (lineItems is null)
-                {
-                    ModelState.AddModelError("LineItems", "Line Items request can not be null");
-                }
-                else
-                {
-                    if (!lineItems.Any())
-                    {
-                        ModelState.AddModelError("EmptyLineItems", "At least one Line Item must be supplied");
-                    }
-                }
-
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(new ApiErrorResp(ModelState));
-                }
-
-                #endregion
-
-                return Created(string.Empty, await BETECommerceAPIBLL.PurchaseOrderHelper.CreatePurchaseOrder(ControllerHelper.GetEmailAddress(Request), lineItems));
+                ModelState.AddModelError("LineItems", "Line Items request can not be null");
             }
-            catch (BETECommerceAPIException)
+            else
             {
-                throw;
+                if (!lineItems.Any())
+                {
+                    ModelState.AddModelError("EmptyLineItems", "At least one Line Item must be supplied");
+                }
             }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiErrorResp(ModelState));
+            }
+
+            #endregion
+
+            return Created(string.Empty, await BETECommerceAPIBLL.PurchaseOrderHelper.CreatePurchaseOrder(ControllerHelper.GetEmailAddress(Request), lineItems));
         }
     }
 }

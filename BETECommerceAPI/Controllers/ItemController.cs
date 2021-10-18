@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BETECommerceAPI.BLL;
+using BETECommerceAPI.BLL.BLLClasses;
 using BETECommerceAPI.BLL.DataContract;
+using BETECommerceAPI.Controllers.ControllerHelpers;
 using BETECommerceAPI.Filters;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -11,13 +12,17 @@ namespace BETECommerceAPI.Controllers
     [Route("api/Item")]
     [ApiController]
     [AuthenticateAccessToken]
-    public class Item : ControllerBase
+    public class ItemController : ControllerBase
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private ItemControllerHelper ItemControllerHelper { get; set; }
+        private ItemBLL ItemBLL { get; set; }
 
-        public Item(IWebHostEnvironment webHostEnvironment)
+        public ItemController(IWebHostEnvironment webHostEnvironment)
         {
             _webHostEnvironment = webHostEnvironment;
+            ItemBLL = new();
+            ItemControllerHelper = new();
         }
 
         [Route("V1/GetItemByItemDetailId")]
@@ -40,9 +45,9 @@ namespace BETECommerceAPI.Controllers
 
             #endregion
 
-            ItemResp _itemResp = await BETECommerceAPIBLL.ItemHelper.GetItemByItemDetailId(itemDetailId);
+            ItemResp _itemResp = await ItemBLL.GetItemByItemDetailId(itemDetailId);
 
-            await ControllerHelper.ItemHelper.GetItemPicturesBase64String(_webHostEnvironment, _itemResp);
+            await ItemControllerHelper.GetItemPicturesBase64String(_webHostEnvironment, _itemResp);
 
             return Ok(_itemResp);
         }
@@ -55,9 +60,9 @@ namespace BETECommerceAPI.Controllers
 
             #endregion
 
-            ItemPaginationResp _itemPaginationResp = await BETECommerceAPIBLL.ItemHelper.GetItemsByCriteria(itemDescription, skip, take);
+            ItemPaginationResp _itemPaginationResp = await ItemBLL.GetItemsByCriteria(itemDescription, skip, take);
 
-            await ControllerHelper.ItemHelper.GetItemPicturesBase64String(_webHostEnvironment, _itemPaginationResp.Items);
+            await ItemControllerHelper.GetItemPicturesBase64String(_webHostEnvironment, _itemPaginationResp.Items);
 
             return Ok(_itemPaginationResp);
         }

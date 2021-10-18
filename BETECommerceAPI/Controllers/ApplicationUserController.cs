@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using BETECommerceAPI.BLL;
+using BETECommerceAPI.BLL.BLLClasses;
 using BETECommerceAPI.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -11,8 +11,14 @@ namespace BETECommerceAPI.Controllers
     [Route("api/ApplicationUser")]
     [ApiController]
     [AuthenticateAccessToken]
-    public class ApplicationUser : ControllerBase
+    public class ApplicationUserController : ControllerBase
     {
+        private ApplicationUserBLL ApplicationUserBLL { get; set; }
+        public ApplicationUserController()
+        {
+            ApplicationUserBLL = new();
+        }
+
         [Route("V1/SignUp")]
         [HttpPost]
         public async Task<ActionResult> SignUp()
@@ -38,7 +44,7 @@ namespace BETECommerceAPI.Controllers
 
             #endregion
 
-            await BETECommerceAPIBLL.ApplicationUserHelper.SignUp(_emailAddress.FirstOrDefault(), _userPassword.FirstOrDefault());
+            await ApplicationUserBLL.SignUp(_emailAddress.FirstOrDefault(), _userPassword.FirstOrDefault());
 
             return StatusCode((int)HttpStatusCode.Created);
         }
@@ -68,7 +74,7 @@ namespace BETECommerceAPI.Controllers
 
             #endregion
 
-            await BETECommerceAPIBLL.ApplicationUserHelper.SignIn(_emailAddress.FirstOrDefault(), _userPassword.FirstOrDefault());
+            await ApplicationUserBLL.SignIn(_emailAddress.FirstOrDefault(), _userPassword.FirstOrDefault());
 
             return Ok();
         }

@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="BETECommerceAPIBLL.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BETECommerceAPI.Data\BETECommerceAPI.Data.csproj" />
   </ItemGroup>
 

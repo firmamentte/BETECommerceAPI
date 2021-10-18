@@ -1,30 +1,43 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using BETECommerceAPI.BLL;
+using BETECommerceAPI.BLL.BLLClasses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 
 namespace BETECommerceAPI.Filters
 {
     [AttributeUsage(AttributeTargets.All)]
-    public class AuthenticateAccessToken : Attribute, IAuthorizationFilter
+    public class AuthenticateAccessToken : TypeFilterAttribute
     {
-        public void OnAuthorization(AuthorizationFilterContext context)
+        public AuthenticateAccessToken() : base(typeof(AuthenticateAccessTokenImplementation)) { }
+        private class AuthenticateAccessTokenImplementation : IAuthorizationFilter
         {
-            if (!context.HttpContext.Request.Headers.TryGetValue("AccessToken", out StringValues _accessToken))
+            private IConfiguration Configuration { get; set; }
+            private ApplicationUserBLL ApplicationUserBLL { get; set; }
+
+            public AuthenticateAccessTokenImplementation(IConfiguration configuration)
             {
-                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                context.Result = new JsonResult(new ApiErrorResp("Access Token required"));
+                Configuration = configuration;
+                ApplicationUserBLL = new();
             }
-            else
+
+            public void OnAuthorization(AuthorizationFilterContext context)
             {
-                if (!BETECommerceAPIBLL.ApplicationUserHelper.IsAccessTokenValid(_accessToken.FirstOrDefault()))
+                if (!context.HttpContext.Request.Headers.TryGetValue("AccessToken", out StringValues _accessToken))
                 {
-                    context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                    context.Result = new JsonResult(new ApiErrorResp("Request Forbidden"));
+                    context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    context.Result = new JsonResult(new ApiErrorResp("Access Token required"));
+                }
+                else
+                {
+                    if (!ApplicationUserBLL.IsAccessTokenValid(Configuration, _accessToken.FirstOrDefault()))
+                    {
+                        context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                        context.Result = new JsonResult(new ApiErrorResp("Request Forbidden"));
+                    }
                 }
             }
         }

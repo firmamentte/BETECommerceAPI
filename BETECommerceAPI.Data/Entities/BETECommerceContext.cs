@@ -28,7 +28,7 @@ namespace BETECommerceAPI.Data.Entities
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(FirmamentUtilities.Utilities.DatabaseHelper.ConnectionString);
-                optionsBuilder.UseLazyLoadingProxies(true);
+                optionsBuilder.UseLazyLoadingProxies();
             }
         }
 

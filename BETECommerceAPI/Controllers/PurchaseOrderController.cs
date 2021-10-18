@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BETECommerceAPI.BLL;
+using BETECommerceAPI.BLL.BLLClasses;
 using BETECommerceAPI.BLL.DataContract;
+using BETECommerceAPI.Controllers.ControllerHelpers;
 using BETECommerceAPI.Filters;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,8 +12,17 @@ namespace BETECommerceAPI.Controllers
     [Route("api/PurchaseOrder")]
     [ApiController]
     [AuthenticateAccessToken]
-    public class PurchaseOrder : ControllerBase
+    public class PurchaseOrderController : ControllerBase
     {
+        private PurchaseOrderBLL PurchaseOrderBLL { get; set; }
+        private ControllerHelper ControllerHelper { get; set; }
+
+        public PurchaseOrderController() 
+        {
+            PurchaseOrderBLL = new();
+            ControllerHelper = new();
+        }
+
         [Route("V1/CreatePurchaseOrder")]
         [HttpPost]
         public async Task<ActionResult> CreatePurchaseOrder([FromBody] List<LineItemReq> lineItems)
@@ -42,7 +51,7 @@ namespace BETECommerceAPI.Controllers
 
             #endregion
 
-            return Created(string.Empty, await BETECommerceAPIBLL.PurchaseOrderHelper.CreatePurchaseOrder(ControllerHelper.GetEmailAddress(Request), lineItems));
+            return Created(string.Empty, await PurchaseOrderBLL.CreatePurchaseOrder(ControllerHelper.GetHeaderUsername(Request), lineItems));
         }
     }
 }

@@ -5,15 +5,14 @@ namespace BETECommerceAPI.BLL.BLLClasses
 {
     public abstract class BETECommerceBLLHelper
     {
-        public IConfiguration Configuration { get; set; }
 
-        public void InitializeAppSettings()
+        public void InitializeAppSettings(IConfiguration configuration)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(FirmamentUtilities.Utilities.DatabaseHelper.ConnectionString))
                 {
-                    FirmamentUtilities.Utilities.DatabaseHelper.ConnectionString = Configuration["ConnectionStrings:DatabasePath"];
+                    FirmamentUtilities.Utilities.DatabaseHelper.ConnectionString = configuration["ConnectionStrings:DatabasePath"];
                 }
             }
             catch (BETECommerceAPIException)

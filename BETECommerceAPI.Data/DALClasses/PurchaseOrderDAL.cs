@@ -7,7 +7,7 @@ namespace BETECommerceAPI.Data.DALClasses
 {
     public class PurchaseOrderDAL
     {
-        public static async Task<bool> IsPurchaseOrderNumberExisting(BETECommerceContext dbContext, string purchaseOrderNumber)
+        public async Task<bool> IsPurchaseOrderNumberExisting(BETECommerceContext dbContext, string purchaseOrderNumber)
         {
             return await (from purchaseOrder in dbContext.PurchaseOrders.Cast<PurchaseOrder>()
                           where purchaseOrder.PurchaseOrderNumber == purchaseOrderNumber

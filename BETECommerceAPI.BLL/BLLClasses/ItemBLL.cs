@@ -10,7 +10,7 @@ namespace BETECommerceAPI.BLL.BLLClasses
 {
     public class ItemBLL
     {
-        public ItemDAL ItemDAL { get; set; }
+        private ItemDAL ItemDAL { get; set; }
         public ItemBLL()
         {
             ItemDAL = new ItemDAL();

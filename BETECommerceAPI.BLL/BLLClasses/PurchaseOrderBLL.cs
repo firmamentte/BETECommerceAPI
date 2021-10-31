@@ -9,9 +9,9 @@ namespace BETECommerceAPI.BLL.BLLClasses
 {
     public class PurchaseOrderBLL : BETECommerceBLLHelper
     {
-        public ApplicationUserDAL ApplicationUserDAL { get; set; }
-        public PurchaseOrderDAL PurchaseOrderDAL { get; set; }
-        public ItemDAL ItemDAL { get; set; }
+        private ApplicationUserDAL ApplicationUserDAL { get; set; }
+        private PurchaseOrderDAL PurchaseOrderDAL { get; set; }
+        private ItemDAL ItemDAL { get; set; }
 
         public PurchaseOrderBLL()
         {

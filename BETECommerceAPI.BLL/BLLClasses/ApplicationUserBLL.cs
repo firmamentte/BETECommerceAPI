@@ -8,7 +8,7 @@ namespace BETECommerceAPI.BLL.BLLClasses
 {
     public class ApplicationUserBLL : BETECommerceBLLHelper
     {
-        public ApplicationUserDAL ApplicationUserDAL { get; set; }
+        private ApplicationUserDAL ApplicationUserDAL { get; set; }
 
         public ApplicationUserBLL()
         {
